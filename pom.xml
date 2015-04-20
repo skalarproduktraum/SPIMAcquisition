@@ -47,6 +47,11 @@
 			<groupId>io.scif</groupId>
 			<artifactId>scifio-bf-compat</artifactId>
 		</dependency>
+        <dependency>
+			<groupId>ome</groupId>
+			<artifactId>ome-xml</artifactId>
+            <version>5.1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>3D_Viewer</artifactId>

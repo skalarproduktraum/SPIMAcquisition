@@ -21,6 +21,9 @@ import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.NonNegativeInteger;
 import ome.xml.model.primitives.PositiveFloat;
 import ome.xml.model.primitives.PositiveInteger;
+import ome.units.quantity.Length;
+import ome.units.quantity.Time;
+import ome.units.UNITS;
 
 public class OMETIFFHandler implements AcqOutputHandler {
 	private File outputDirectory;
@@ -92,10 +95,10 @@ public class OMETIFFHandler implements AcqOutputHandler {
 				meta.setPixelsSizeC(new PositiveInteger(1), image);
 				meta.setPixelsSizeT(new PositiveInteger(timesteps), image);
 
-				meta.setPixelsPhysicalSizeX(new PositiveFloat(core.getPixelSizeUm()), image);
-				meta.setPixelsPhysicalSizeY(new PositiveFloat(core.getPixelSizeUm()), image);
-				meta.setPixelsPhysicalSizeZ(new PositiveFloat(Math.max(row.getZStepSize(), 1.0D)), image);
-				meta.setPixelsTimeIncrement(new Double(deltat), image);
+				meta.setPixelsPhysicalSizeX(new Length(core.getPixelSizeUm(), UNITS.MICROM), image);
+				meta.setPixelsPhysicalSizeY(new Length(core.getPixelSizeUm(), UNITS.MICROM), image);
+				meta.setPixelsPhysicalSizeZ(new Length(Math.max(row.getZStepSize(), 1.0D), UNITS.MICROM), image);
+				meta.setPixelsTimeIncrement(new Time(deltat, UNITS.SECOND), image);
 			}
 
 			writer = new ImageWriter().getWriter(makeFilename(0, 0));
@@ -160,12 +163,12 @@ public class OMETIFFHandler implements AcqOutputHandler {
 		int timePoint = imageCounter / stacks;
 		int plane = timePoint*acqRows[image].getDepth() + sliceCounter;
 
-		meta.setPlanePositionX(X, image, plane);
-		meta.setPlanePositionY(Y, image, plane);
-		meta.setPlanePositionZ(Z, image, plane);
+		meta.setPlanePositionX(new Length(X, UNITS.MICROM), image, plane);
+		meta.setPlanePositionY(new Length(Y, UNITS.MICROM), image, plane);
+		meta.setPlanePositionZ(new Length(Z, UNITS.MICROM), image, plane);
 		meta.setPlaneTheZ(new NonNegativeInteger(sliceCounter), image, plane);
 		meta.setPlaneTheT(new NonNegativeInteger(timePoint), image, plane);
-		meta.setPlaneDeltaT(deltaT, image, plane);
+		meta.setPlaneDeltaT(new Time(deltaT, UNITS.SECOND), image, plane);
 
 		storeDouble(image, plane, 0, "Theta", theta);
 
